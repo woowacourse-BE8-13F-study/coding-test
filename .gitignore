@@ -1,17 +1,23 @@
-# Java
-*.class
-target/
+# Gradle
+.gradle/
 build/
-out/
-bin/
 
-# IDE
+# IntelliJ IDEA
 .idea/
 *.iml
-.vscode/
-.settings/
+*.ipr
+*.iws
+out/
+
+# Eclipse / VS Code
 .classpath
 .project
+.settings/
+.vscode/
+bin/
+
+# Java
+*.class
 
 # OS
 .DS_Store
