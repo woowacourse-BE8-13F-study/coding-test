@@ -5,7 +5,7 @@
 ## 협업 흐름 (개인 브랜치 → main PR)
 ```
 main (보호 브랜치, 직접 push 금지)
- └─ solve/<깃허브아이디>/<파트번호-문제명>   ← 개인 작업 브랜치
+ └─ mychan   ← 개인 작업 브랜치
 ```
 1. 최신 `main`을 받아옵니다.
    ```bash
@@ -13,7 +13,7 @@ main (보호 브랜치, 직접 push 금지)
    ```
 2. 작업 브랜치를 만듭니다. (브랜치명: `solve/<아이디>/<파트번호-문제명>`)
    ```bash
-   git checkout -b solve/Uechann/05-두정수사이의합
+   git checkout -b mychan
    ```
 3. 풀이를 폴더 규칙에 맞게 추가하고 커밋합니다.
    ```bash
@@ -22,9 +22,8 @@ main (보호 브랜치, 직접 push 금지)
    ```
 4. 브랜치를 push하고 **`main`으로 PR**을 올립니다.
    ```bash
-   git push -u origin solve/Uechann/05-두정수사이의합
+   git push -u origin mychan
    ```
-5. 스터디원 리뷰(최소 1명 권장) 후 `main`에 머지합니다. 머지된 브랜치는 삭제합니다.
 
 > 같은 문제를 여러 명이 풀어도 괜찮습니다. 파일명이 `<깃허브아이디>.java`라 서로 충돌하지 않습니다.
 
