@@ -5,8 +5,6 @@
 - Arrays.copyOf : 배열 (깊은) 복사
  */
 
-package remove_min_number;
-
 import java.util.Arrays;
 
 public class Solution {
