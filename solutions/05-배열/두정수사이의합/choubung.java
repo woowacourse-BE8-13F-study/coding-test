@@ -3,8 +3,6 @@
 주제는 배열 파트인데 굳이 배열을 쓸 필요를 모르겠다.
  */
 
-package sum.of.two.integers;
-
 public class Solution {
     public long solution(int a, int b) {
         long answer = 0;
