@@ -21,8 +21,10 @@ jobs:
         run: |
           set -euo pipefail
 
-          # "오늘 00:00 (KST)" 를 UTC 로 환산 → 이 시각 이전에 열린 PR = 전날까지 올라온 PR
-          CUTOFF=$(TZ=Asia/Seoul date -u -d 'today 00:00' +%Y-%m-%dT%H:%M:%SZ)
+          # "오늘 00:00 (KST)" 시각을 UTC 로 환산 → 이 시각 이전에 열린 PR = 전날까지 올라온 PR.
+          # 주의: `date -u` 는 TZ 환경변수를 무시하므로, epoch 로 KST 자정을 구한 뒤 UTC 로 변환한다.
+          CUTOFF_EPOCH=$(TZ=Asia/Seoul date -d 'today 00:00' +%s)
+          CUTOFF=$(date -u -d "@${CUTOFF_EPOCH}" +%Y-%m-%dT%H:%M:%SZ)
           echo "기준 시각(이 시각 이전에 열린 PR만 merge): $CUTOFF (UTC)"
 
           # main 대상 · open · draft 아님 · 기준 시각 이전 생성 → PR 번호 수집
