@@ -10,7 +10,7 @@ class Solution {
         wordSet.add(words[0]);
         count[1]++;
         pc = words[0].charAt(words[0].length()-1);
-        
+
         for(int i=1; i<words.length; i++) {
             int current = (i%n)+1;
             count[current]++;
