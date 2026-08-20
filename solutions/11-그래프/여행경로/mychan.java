@@ -39,14 +39,12 @@ class Solution {
         }
 
         for(int i=0; i< v.size(); i++) {
-
             String next = v.get(i);
 
             v.remove(i);
             answer.add(next);
 
             if(dfs(next, remain-1, graph, answer)) return true;
-
 
             v.add(i, next);
             answer.remove(answer.size() - 1);
