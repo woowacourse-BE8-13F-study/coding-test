@@ -1,0 +1,48 @@
+name: auto-merge-daily
+
+# 매일 새벽 4:30(KST)에, 전날 23:59까지 올라온 열린 PR을 자동으로 merge 한다.
+on:
+  schedule:
+    - cron: '30 19 * * *'   # UTC 19:30 = KST 익일 04:30 (한국시간은 서머타임 없음)
+  workflow_dispatch:          # 필요하면 수동 실행(테스트용)
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 전날까지 올라온 PR 자동 merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          # "오늘 00:00 (KST)" 시각을 UTC 로 환산 → 이 시각 이전에 열린 PR = 전날까지 올라온 PR.
+          # 주의: `date -u` 는 TZ 환경변수를 무시하므로, epoch 로 KST 자정을 구한 뒤 UTC 로 변환한다.
+          CUTOFF_EPOCH=$(TZ=Asia/Seoul date -d 'today 00:00' +%s)
+          CUTOFF=$(date -u -d "@${CUTOFF_EPOCH}" +%Y-%m-%dT%H:%M:%SZ)
+          echo "기준 시각(이 시각 이전에 열린 PR만 merge): $CUTOFF (UTC)"
+
+          # main 대상 · open · draft 아님 · 기준 시각 이전 생성 → PR 번호 수집
+          prs=$(gh pr list --base main --state open \
+                  --json number,createdAt,isDraft \
+                  --jq ".[] | select(.isDraft == false) | select(.createdAt < \"$CUTOFF\") | .number")
+
+          if [ -z "$prs" ]; then
+            echo "merge할 PR이 없습니다."
+            exit 0
+          fi
+
+          for pr in $prs; do
+            echo "::group::PR #$pr merge 시도"
+            if gh pr merge "$pr" --merge; then
+              echo "✅ PR #$pr merged"
+            else
+              echo "⚠️ PR #$pr merge 실패(충돌 등) — 건너뜀"
+            fi
+            echo "::endgroup::"
+          done
